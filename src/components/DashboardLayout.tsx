@@ -11,10 +11,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
-          <header className="sticky top-0 z-10 flex h-14 items-center border-b border-border bg-background px-4">
+          <header className="sticky top-0 z-10 flex h-14 items-center border-b border-border bg-card backdrop-blur-sm">
             <SidebarTrigger />
           </header>
-          <main className="flex-1 p-6 bg-background">
+          <main className="flex-1 p-6 bg-accent/30">
             {children}
           </main>
         </div>
