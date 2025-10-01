@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -8,6 +9,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 const machines = [
   {
@@ -85,15 +92,26 @@ const fleetStats = [
   { label: "Total Balance", value: "$428,750" },
 ];
 
+const transactionStats = [
+  { label: "Total Transactions", value: "2,847" },
+  { label: "Total Deposited", value: "$1,245,890" },
+  { label: "Total Withdrawn", value: "$817,140" },
+  { label: "Cash in Machines", value: "$428,750" },
+];
+
 const Machines = () => {
+  const [selectedMachine, setSelectedMachine] = useState<string>("all");
+  const [dateFrom, setDateFrom] = useState<Date>();
+  const [dateTo, setDateTo] = useState<Date>();
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Connected":
-        return <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">Connected</Badge>;
+        return <Badge className="bg-primary/10 text-primary border-primary/20">Connected</Badge>;
       case "Transmitting":
-        return <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Transmitting</Badge>;
+        return <Badge className="bg-accent text-accent-foreground border-accent-foreground/20">Transmitting</Badge>;
       case "Error":
-        return <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">Error</Badge>;
+        return <Badge className="bg-secondary/10 text-secondary border-secondary/20">Error</Badge>;
       case "Offline":
         return <Badge className="bg-muted text-muted-foreground">Offline</Badge>;
       default:
@@ -101,13 +119,69 @@ const Machines = () => {
     }
   };
 
+  const filteredMachines = selectedMachine === "all" 
+    ? machines 
+    : machines.filter(m => m.id === selectedMachine);
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">RPT Machines</h1>
-        <p className="text-muted-foreground">
-          Monitor and manage your IoT cash deposit machine fleet
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">RPT Machines</h1>
+          <p className="text-muted-foreground">
+            Monitor and manage your IoT cash deposit machine fleet
+          </p>
+        </div>
+        
+        <div className="flex gap-2">
+          <Select value={selectedMachine} onValueChange={setSelectedMachine}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select machine" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Machines</SelectItem>
+              {machines.map((machine) => (
+                <SelectItem key={machine.id} value={machine.id}>
+                  {machine.id}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-[140px] justify-start">
+                <Calendar className="mr-2 h-4 w-4" />
+                {dateFrom ? format(dateFrom, "MMM dd") : "From"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 bg-popover" align="start">
+              <CalendarComponent
+                mode="single"
+                selected={dateFrom}
+                onSelect={setDateFrom}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-[140px] justify-start">
+                <Calendar className="mr-2 h-4 w-4" />
+                {dateTo ? format(dateTo, "MMM dd") : "To"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 bg-popover" align="start">
+              <CalendarComponent
+                mode="single"
+                selected={dateTo}
+                onSelect={setDateTo}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
@@ -143,7 +217,7 @@ const Machines = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {machines.map((machine) => (
+              {filteredMachines.map((machine) => (
                 <TableRow key={machine.id}>
                   <TableCell className="font-medium whitespace-nowrap">{machine.id}</TableCell>
                   <TableCell className="truncate max-w-[200px]" title={machine.location}>
@@ -161,6 +235,21 @@ const Machines = () => {
           </Table>
         </CardContent>
       </Card>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {transactionStats.map((stat) => (
+          <Card key={stat.label}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {stat.label}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stat.value}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

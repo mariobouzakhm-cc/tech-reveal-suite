@@ -95,11 +95,11 @@ const Support = () => {
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "High":
-        return <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">High</Badge>;
+        return <Badge className="bg-secondary/10 text-secondary border-secondary/20">High</Badge>;
       case "Medium":
-        return <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">Medium</Badge>;
+        return <Badge className="bg-accent text-accent-foreground border-accent-foreground/20">Medium</Badge>;
       case "Low":
-        return <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Low</Badge>;
+        return <Badge className="bg-primary/10 text-primary border-primary/20">Low</Badge>;
       default:
         return <Badge>{priority}</Badge>;
     }
@@ -108,11 +108,11 @@ const Support = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Open":
-        return <Badge className="bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400">Open</Badge>;
+        return <Badge className="bg-secondary/10 text-secondary border-secondary/20">Open</Badge>;
       case "In Progress":
-        return <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">In Progress</Badge>;
+        return <Badge className="bg-accent text-accent-foreground border-accent-foreground/20">In Progress</Badge>;
       case "Closed":
-        return <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">Closed</Badge>;
+        return <Badge className="bg-primary/10 text-primary border-primary/20">Closed</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
