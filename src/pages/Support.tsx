@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -92,6 +93,8 @@ const supportStats = [
 ];
 
 const Support = () => {
+  const navigate = useNavigate();
+  
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "High":
@@ -162,7 +165,11 @@ const Support = () => {
             </TableHeader>
             <TableBody>
               {cases.map((caseItem) => (
-                <TableRow key={caseItem.id}>
+                <TableRow 
+                  key={caseItem.id}
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => navigate(`/support/${caseItem.id}`)}
+                >
                   <TableCell className="font-medium whitespace-nowrap">{caseItem.id}</TableCell>
                   <TableCell className="truncate max-w-[150px]" title={caseItem.customer}>
                     {caseItem.customer}
