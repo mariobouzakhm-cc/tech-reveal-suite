@@ -88,8 +88,6 @@ const fleetStats = [
   { label: "Online", value: "142" },
   { label: "Error Mode", value: "8" },
   { label: "Offline", value: "6" },
-  { label: "Total Transactions Today", value: "2,847" },
-  { label: "Total Balance", value: "$428,750" },
 ];
 
 const transactionStats = [
@@ -184,7 +182,7 @@ const Machines = () => {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {fleetStats.map((stat) => (
           <Card key={stat.label}>
             <CardHeader className="pb-2">
