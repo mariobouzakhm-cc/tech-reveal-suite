@@ -14,16 +14,188 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      businesses: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          kyb_status: string
+          kyb_verified_at: string | null
+          name: string
+          phone: string | null
+          registration_number: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          kyb_status?: string
+          kyb_verified_at?: string | null
+          name: string
+          phone?: string | null
+          registration_number?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          kyb_status?: string
+          kyb_verified_at?: string | null
+          name?: string
+          phone?: string | null
+          registration_number?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          kyc_status: string
+          kyc_verified_at: string | null
+          last_name: string
+          phone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          kyc_status?: string
+          kyc_verified_at?: string | null
+          last_name: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          kyc_status?: string
+          kyc_verified_at?: string | null
+          last_name?: string
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          first_name: string
+          id: string
+          last_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          first_name: string
+          id: string
+          last_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      support_cases: {
+        Row: {
+          assigned_to: string | null
+          case_number: string
+          created_at: string | null
+          customer_id: string | null
+          description: string | null
+          id: string
+          machine_id: string | null
+          priority: string
+          status: string
+          subject: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          case_number: string
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          id?: string
+          machine_id?: string | null
+          priority?: string
+          status?: string
+          subject: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          case_number?: string
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          id?: string
+          machine_id?: string | null
+          priority?: string
+          status?: string
+          subject?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_cases_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "dev" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +322,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "dev", "user"],
+    },
   },
 } as const
