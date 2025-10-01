@@ -130,29 +130,31 @@ const Machines = () => {
           <CardTitle>Machine Status</CardTitle>
           <CardDescription>Real-time status of all RPT machines</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Machine ID</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last Ping</TableHead>
-                <TableHead>Transactions (24h)</TableHead>
-                <TableHead>Balance</TableHead>
+                <TableHead className="whitespace-nowrap">Machine ID</TableHead>
+                <TableHead className="min-w-[150px]">Location</TableHead>
+                <TableHead className="whitespace-nowrap">Status</TableHead>
+                <TableHead className="whitespace-nowrap">Last Ping</TableHead>
+                <TableHead className="whitespace-nowrap">Transactions (24h)</TableHead>
+                <TableHead className="whitespace-nowrap">Balance</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {machines.map((machine) => (
                 <TableRow key={machine.id}>
-                  <TableCell className="font-medium">{machine.id}</TableCell>
-                  <TableCell>{machine.location}</TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">{machine.id}</TableCell>
+                  <TableCell className="truncate max-w-[200px]" title={machine.location}>
+                    {machine.location}
+                  </TableCell>
                   <TableCell>{getStatusBadge(machine.status)}</TableCell>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell className="text-muted-foreground whitespace-nowrap">
                     {machine.lastPing}
                   </TableCell>
-                  <TableCell>{machine.transactions}</TableCell>
-                  <TableCell className="font-medium">{machine.balance}</TableCell>
+                  <TableCell className="whitespace-nowrap">{machine.transactions}</TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">{machine.balance}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

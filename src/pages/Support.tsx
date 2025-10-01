@@ -147,31 +147,35 @@ const Support = () => {
           <CardTitle>Support Cases</CardTitle>
           <CardDescription>All customer support tickets</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Case ID</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Subject</TableHead>
-                <TableHead>Machine ID</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
+                <TableHead className="whitespace-nowrap">Case ID</TableHead>
+                <TableHead className="min-w-[120px]">Customer</TableHead>
+                <TableHead className="min-w-[150px]">Subject</TableHead>
+                <TableHead className="whitespace-nowrap">Machine ID</TableHead>
+                <TableHead className="whitespace-nowrap">Priority</TableHead>
+                <TableHead className="whitespace-nowrap">Status</TableHead>
+                <TableHead className="whitespace-nowrap">Created</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {cases.map((caseItem) => (
                 <TableRow key={caseItem.id}>
-                  <TableCell className="font-medium">{caseItem.id}</TableCell>
-                  <TableCell>{caseItem.customer}</TableCell>
-                  <TableCell>{caseItem.subject}</TableCell>
-                  <TableCell className="font-mono text-sm">
+                  <TableCell className="font-medium whitespace-nowrap">{caseItem.id}</TableCell>
+                  <TableCell className="truncate max-w-[150px]" title={caseItem.customer}>
+                    {caseItem.customer}
+                  </TableCell>
+                  <TableCell className="truncate max-w-[200px]" title={caseItem.subject}>
+                    {caseItem.subject}
+                  </TableCell>
+                  <TableCell className="font-mono text-sm whitespace-nowrap">
                     {caseItem.machineId}
                   </TableCell>
                   <TableCell>{getPriorityBadge(caseItem.priority)}</TableCell>
                   <TableCell>{getStatusBadge(caseItem.status)}</TableCell>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell className="text-muted-foreground whitespace-nowrap">
                     {caseItem.created}
                   </TableCell>
                 </TableRow>
