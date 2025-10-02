@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "lucide-react";
+import { Calendar, Wifi, Navigation, Cpu, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -24,6 +24,12 @@ const machines = [
     lastPing: "2 min ago",
     transactions: 45,
     balance: "$12,450",
+    diagnostics: {
+      gps: { status: "OK", errorCode: null },
+      recycler: { status: "OK", errorCode: null },
+      accel: { status: "OK", errorCode: null },
+      wifi: { status: "OK", errorCode: null },
+    },
   },
   {
     id: "RPT-002",
@@ -32,6 +38,12 @@ const machines = [
     lastPing: "5 min ago",
     transactions: 38,
     balance: "$9,820",
+    diagnostics: {
+      gps: { status: "OK", errorCode: null },
+      recycler: { status: "OK", errorCode: null },
+      accel: { status: "Warning", errorCode: "ACC-W201" },
+      wifi: { status: "OK", errorCode: null },
+    },
   },
   {
     id: "RPT-003",
@@ -40,6 +52,12 @@ const machines = [
     lastPing: "15 min ago",
     transactions: 12,
     balance: "$3,200",
+    diagnostics: {
+      gps: { status: "Error", errorCode: "GPS-E404" },
+      recycler: { status: "Error", errorCode: "RCY-E101" },
+      accel: { status: "OK", errorCode: null },
+      wifi: { status: "Warning", errorCode: "WIFI-W301" },
+    },
   },
   {
     id: "RPT-004",
@@ -48,6 +66,12 @@ const machines = [
     lastPing: "1 min ago",
     transactions: 67,
     balance: "$18,900",
+    diagnostics: {
+      gps: { status: "OK", errorCode: null },
+      recycler: { status: "OK", errorCode: null },
+      accel: { status: "OK", errorCode: null },
+      wifi: { status: "OK", errorCode: null },
+    },
   },
   {
     id: "RPT-005",
@@ -56,6 +80,12 @@ const machines = [
     lastPing: "2 hours ago",
     transactions: 0,
     balance: "$0",
+    diagnostics: {
+      gps: { status: "Offline", errorCode: "GPS-E500" },
+      recycler: { status: "Offline", errorCode: "RCY-E500" },
+      accel: { status: "Offline", errorCode: "ACC-E500" },
+      wifi: { status: "Error", errorCode: "WIFI-E500" },
+    },
   },
   {
     id: "RPT-006",
@@ -64,6 +94,12 @@ const machines = [
     lastPing: "3 min ago",
     transactions: 29,
     balance: "$7,650",
+    diagnostics: {
+      gps: { status: "OK", errorCode: null },
+      recycler: { status: "OK", errorCode: null },
+      accel: { status: "OK", errorCode: null },
+      wifi: { status: "OK", errorCode: null },
+    },
   },
   {
     id: "RPT-007",
@@ -72,6 +108,12 @@ const machines = [
     lastPing: "1 min ago",
     transactions: 54,
     balance: "$15,300",
+    diagnostics: {
+      gps: { status: "OK", errorCode: null },
+      recycler: { status: "OK", errorCode: null },
+      accel: { status: "OK", errorCode: null },
+      wifi: { status: "OK", errorCode: null },
+    },
   },
   {
     id: "RPT-008",
@@ -80,6 +122,12 @@ const machines = [
     lastPing: "30 min ago",
     transactions: 8,
     balance: "$2,100",
+    diagnostics: {
+      gps: { status: "OK", errorCode: null },
+      recycler: { status: "Error", errorCode: "RCY-E202" },
+      accel: { status: "OK", errorCode: null },
+      wifi: { status: "OK", errorCode: null },
+    },
   },
 ];
 
@@ -120,6 +168,32 @@ const Machines = () => {
   const filteredMachines = selectedMachine === "all" 
     ? machines 
     : machines.filter(m => m.id === selectedMachine);
+
+  const selectedMachineData = selectedMachine !== "all" 
+    ? machines.find(m => m.id === selectedMachine)
+    : null;
+
+  const getPeripheralStatusBadge = (status: string) => {
+    switch (status) {
+      case "OK":
+        return <Badge className="bg-primary/10 text-primary border-primary/20">OK</Badge>;
+      case "Warning":
+        return <Badge className="bg-accent text-accent-foreground border-accent-foreground/20">Warning</Badge>;
+      case "Error":
+        return <Badge className="bg-secondary/10 text-secondary border-secondary/20">Error</Badge>;
+      case "Offline":
+        return <Badge className="bg-muted text-muted-foreground">Offline</Badge>;
+      default:
+        return <Badge>{status}</Badge>;
+    }
+  };
+
+  const peripheralIcons = {
+    gps: Navigation,
+    recycler: RefreshCw,
+    accel: Cpu,
+    wifi: Wifi,
+  };
 
   return (
     <div className="space-y-6">
@@ -248,6 +322,46 @@ const Machines = () => {
           </Card>
         ))}
       </div>
+
+      {selectedMachineData && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Peripheral Diagnostics - {selectedMachineData.id}</CardTitle>
+            <CardDescription>Real-time status of machine peripherals</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {Object.entries(selectedMachineData.diagnostics).map(([peripheral, data]) => {
+                const Icon = peripheralIcons[peripheral as keyof typeof peripheralIcons];
+                return (
+                  <Card key={peripheral}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-4 w-4 text-muted-foreground" />
+                          <CardTitle className="text-sm font-medium capitalize">
+                            {peripheral}
+                          </CardTitle>
+                        </div>
+                        {getPeripheralStatusBadge(data.status)}
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-xs text-muted-foreground">
+                        {data.errorCode ? (
+                          <span className="font-mono">Code: {data.errorCode}</span>
+                        ) : (
+                          <span>No errors detected</span>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
